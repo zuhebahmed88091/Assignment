@@ -7,7 +7,9 @@ export default function Login() {
     email: "",
     password: "",
   });
+  
   const [errors, setErrors] = useState({});
+
   const handleInput = (e) => {
     setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
