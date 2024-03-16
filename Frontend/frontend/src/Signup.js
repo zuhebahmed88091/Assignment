@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import validateSignup from "./SignupValidation";
+import axios from "axios";
 
 export default function Signup() {
   const [values, setValues] = useState({
@@ -8,6 +9,8 @@ export default function Signup() {
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
 
@@ -17,7 +20,16 @@ export default function Signup() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors(validateSignup(values));
+    const err = validateSignup(values);
+    setErrors(err);
+    if (err.name === "" && err.email === "" && err.password === "") {
+      axios
+        .post("http://localhost:8801/signup", values)
+        .then((res) => {
+          navigate("/");
+        })
+        .catch((err) => console.log(err));
+    }
   };
   return (
     <div className="d-flex justify-content-center align-items-center bg-black vh-100">
@@ -48,7 +60,9 @@ export default function Signup() {
               onChange={handleInput}
               className="form-control rounded-0"
             />
-            {errors.email && <span className="text-danger">{errors.email}</span>}
+            {errors.email && (
+              <span className="text-danger">{errors.email}</span>
+            )}
           </div>
           <div className="mb-3">
             <label htmlFor="password">
@@ -61,9 +75,13 @@ export default function Signup() {
               onChange={handleInput}
               className="form-control rounded-0"
             />
-            {errors.password && <span className="text-danger">{errors.password}</span>}
+            {errors.password && (
+              <span className="text-danger">{errors.password}</span>
+            )}
           </div>
-          <button type="submit" className="btn btn-success w-100 rounded-0">Sign Up</button>
+          <button type="submit" className="btn btn-success w-100 rounded-0">
+            Sign Up
+          </button>
           <p>Already have an account?</p>
           <Link
             to="/"

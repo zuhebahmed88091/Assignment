@@ -1,22 +1,38 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import validateLogin from "./LoginValidation";
+import axios from "axios";
 
 export default function Login() {
   const [values, setValues] = useState({
     email: "",
     password: "",
   });
-  
+
+  const navigate = useNavigate();
+
   const [errors, setErrors] = useState({});
 
   const handleInput = (e) => {
-    setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors(validateLogin(values));
+    const err = validateLogin(values);
+    setErrors(err);
+    if (err.email === "" && err.password === "") {
+      axios
+        .post("http://localhost:8801/login", values)
+        .then((res) => {
+          if(res.data === "Login Success"){
+            navigate("/home");
+          } else {
+            alert("No record existed");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   return (
@@ -35,7 +51,9 @@ export default function Login() {
               onChange={handleInput}
               className="form-control rounded-0"
             />
-            {errors.email && <span className="text-danger">{errors.email}</span>}
+            {errors.email && (
+              <span className="text-danger">{errors.email}</span>
+            )}
           </div>
           <div className="mb-3">
             <label htmlFor="password">
@@ -48,7 +66,9 @@ export default function Login() {
               onChange={handleInput}
               className="form-control rounded-0"
             />
-            {errors.password && <span className="text-danger">{errors.password}</span>}
+            {errors.password && (
+              <span className="text-danger">{errors.password}</span>
+            )}
           </div>
           <button type="submit" className="btn btn-success w-100 rounded-0">
             Log In
