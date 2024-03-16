@@ -1,19 +1,63 @@
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import validateLogin from "./LoginValidation";
+
 export default function Login() {
+  const [values, setValues] = useState({
+    email: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({});
+  const handleInput = (e) => {
+    setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setErrors(validateLogin(values));
+  };
+
   return (
     <div className="d-flex justify-content-center align-items-center bg-black vh-100">
       <div className="bg-white p-3 rounded w-25">
-        <form action="">
+        <form action="" onSubmit={handleSubmit}>
+          <h2>Log In</h2>
           <div className="mb-3">
-            <label htmlFor="email"><strong>Email</strong></label>
-            <input type="email" placeholder="Enter Email" className="form-control rounded-0" />
+            <label htmlFor="email">
+              <strong>Email</strong>
+            </label>
+            <input
+              type="email"
+              placeholder="Enter Email"
+              name="email"
+              onChange={handleInput}
+              className="form-control rounded-0"
+            />
+            {errors.email && <span className="text-danger">{errors.email}</span>}
           </div>
           <div className="mb-3">
-            <label htmlFor="password"><strong>Password</strong></label>
-            <input type="password" placeholder="Enter Password" className="form-control rounded-0" />
+            <label htmlFor="password">
+              <strong>Password</strong>
+            </label>
+            <input
+              type="password"
+              placeholder="Enter Password"
+              name="password"
+              onChange={handleInput}
+              className="form-control rounded-0"
+            />
+            {errors.password && <span className="text-danger">{errors.password}</span>}
           </div>
-          <button className="btn btn-success w-100 rounded-0">Log In</button>
+          <button type="submit" className="btn btn-success w-100 rounded-0">
+            Log In
+          </button>
           <p>Don't have an account?</p>
-          <button className="btn btn-default border w-100 bg-light rounded-0">Create Account</button>
+          <Link
+            to="/signup"
+            className="btn btn-default border w-100 bg-light rounded-0 text-decoration-none"
+          >
+            Create Account
+          </Link>
         </form>
       </div>
     </div>
