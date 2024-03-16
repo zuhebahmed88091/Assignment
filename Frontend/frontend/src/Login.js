@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import validateLogin from "./LoginValidation";
 import axios from "axios";
 
-export default function Login() {
+export default function Login({ setIsAuthenticated }) {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -25,7 +25,8 @@ export default function Login() {
       axios
         .post("http://localhost:8801/login", values)
         .then((res) => {
-          if(res.data === "Login Success"){
+          if (res.data === "Login Success") {
+            setIsAuthenticated(true);
             navigate("/home");
           } else {
             alert("No record existed");
