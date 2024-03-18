@@ -20,7 +20,7 @@ services:
       - DB_NAME=signup
 
   database:
-    image: mysql:latest
+    image: mariadb:10.4.32
     ports:
       - "3306:3306"
     environment:
