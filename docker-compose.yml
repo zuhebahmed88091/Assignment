@@ -1,14 +1,21 @@
 version: "3.8"
 services:
   frontend:
-    image: zuheb8809/frontend:1.0
+    build:
+      context: .
+      dockerfile: /Frontend/frontend/Dockerfile
+    volumes:
+      - ./Frontend/frontend/:/usr/src/app
+      - /usr/src/app/node_modules/
     ports:
       - "3000:3000"
     depends_on:
       - backend
 
   backend:
-    image: zuheb8809/backend:1.0
+    build:
+      context: .
+      dockerfile: /Backend/Dockerfile
     ports:
       - "8801:8801"
     depends_on:

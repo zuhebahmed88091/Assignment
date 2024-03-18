@@ -19,8 +19,6 @@ function validateSignup(values) {
 
   if (values.password === "") {
     errors.password = "Password should not be empty";
-  } else if (!passwordPattern.test(values.password)) {
-    errors.password = "Password did not match";
   } else {
     errors.password = "";
   }
